@@ -11,10 +11,11 @@ const counter = useCounterStore()
   </div>
 </template>
 
-<style>
-@media (min-width: 1024px) {
-  .about-content {
-    padding-top: 50px;
-  }
+<style lang="less">
+.about-content {
+  background-color: #dedede;
+  padding: 20px;
+  margin-top: 10px;
 }
+
 </style>
