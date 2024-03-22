@@ -1,7 +1,16 @@
 <script setup lang="ts">
 import { useCounterStore } from '@/stores/counter'
-import test from './data/test?worker'
-console.log(test,'test----');
+import test1 from './data/test?worker'
+import imgeUrl from '../../assets/logo.svg'
+const imgUrl1 = new URL('./../assets/logo.svg', import.meta.url).href
+console.log(test1,'test----');
+console.log(imgeUrl,'imgeUrl');
+console.log(imgUrl1,);
+console.log(window.foo,'rrrrrrrrr-----');
+
+
+
+
 
 const counter = useCounterStore()
 </script>
