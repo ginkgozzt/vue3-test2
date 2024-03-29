@@ -1,29 +1,31 @@
 <script setup lang="ts">
-import { useCounterStore } from '@/stores/counter'
-import test1 from './data/test?worker'
-import imgeUrl from '../../assets/logo.svg'
-const imgUrl1 = new URL('./../assets/logo.svg', import.meta.url).href
-console.log(test1,'test----');
-console.log(imgeUrl,'imgeUrl');
-console.log(imgUrl1,);
-console.log(window.foo,'rrrrrrrrr-----');
-
-
-
-
-
-const counter = useCounterStore()
+import { inject, reactive } from "vue";
+import { getResourcesData,getTemplateData } from "../../api/resources";
+console.log(inject("request"), "request---66666-this666");
+// 表单的数据
+const formData = reactive({
+  template_branch_id: "",
+});
+let templateList:Array<any> = [],aosResourcesData:any = {}
+const getData  = async() =>{
+  templateList = await getTemplateData();
+  aosResourcesData = await getResourcesData();
+}
+getData()
 </script>
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
+  <h1>自定义组件</h1>
     <div>
-      <span>计数:</span>
-      <span>{{ counter.count }}</span>
-      <a-button type="primary" @click="counter.increment">增加计算</a-button>
-      <a-button type="primary" @click="counter.decrement">减少计算</a-button>
+      <span>选择模板</span>
+      <Select v-model="formData.template_branch_id" style="width: 200px">
+        <Option
+          v-for="item in templateList"
+          :value="item.template_branch_id"
+          :key="item.template_branch_id"
+          >{{ item.label }}</Option
+        >
+      </Select>
     </div>
-  </div>
 </template>
 
 <style>
@@ -31,7 +33,6 @@ const counter = useCounterStore()
   .about {
     min-height: 100vh;
     margin: auto;
-    padding-top: 100px;
   }
 }
 </style>

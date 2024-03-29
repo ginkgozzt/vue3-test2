@@ -7,3 +7,10 @@ declare module '*.vue' {
 interface Window {
   foo: string;
 }
+interface ImportMetaEnv {
+  readonly VITE_BASE: string
+  // 更多环境变量...
+}
+interface ImportMeta {
+  readonly env: ImportMetaEnv
+}

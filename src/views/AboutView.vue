@@ -16,6 +16,7 @@ const value = ref('')
       <a-button type="primary" @click="counter.decrement">减少计算DDDD</a-button>
     </div>
     <AboutContent />
+   
   </div>
 </template>
 
@@ -24,7 +25,6 @@ const value = ref('')
   .about {
     min-height: 100vh;
     margin: auto;
-    padding-top: 100px;
   }
 }
 </style>

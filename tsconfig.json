@@ -1,5 +1,7 @@
 {
   "files": [],
+  "suppressImplicitAnyIndexErrors":true,
+  "noImplicitAny": true,
   "references": [
     {
       "path": "./tsconfig.node.json"
