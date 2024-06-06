@@ -46,8 +46,8 @@ export const getResourcesData = async () => {
 export const getTemplateData = async() =>{
   let res = await request({url:'/aos/templates?filter_by=name:contains:zzt',isError: false});
   let items = res?.data?.items || [];
-  console.log(items,'items,aaaaa');
   let arr:Array<any> = [];
+  arr = items;
   return arr;
   
 

@@ -41,7 +41,7 @@ nav {
 }
 
 nav a.router-link-exact-active {
-  color: var(--color-text);
+  color: var(--active-color-text);
 }
 
 nav a.router-link-exact-active:hover {
