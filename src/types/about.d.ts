@@ -6,5 +6,8 @@ export  interface User {
     address?:string,
     company?: string
 
-
 }
+declare namespace aa {
+    let a:string
+}
+

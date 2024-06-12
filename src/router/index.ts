@@ -18,6 +18,12 @@ const router = createRouter({
       path:'/custom-component',
       name:'custom-component',
       component: () => import('../components/FormComponents/index.vue')
+    },
+    {
+      
+      path:'/amap-component',
+      name:'amap-component',
+      component: () => import('../views/AmapView.vue')
     }
   ]
 })

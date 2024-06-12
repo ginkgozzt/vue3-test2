@@ -6,6 +6,7 @@ declare module '*.vue' {
 }
 interface Window {
   foo: string;
+  _AMapSecurityConfig: any
 }
 interface ImportMetaEnv {
   readonly VITE_BASE: string

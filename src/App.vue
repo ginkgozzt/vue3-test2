@@ -11,6 +11,7 @@ import HelloWorld from './components/HelloWorld.vue'
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/custom-component">自定义组件</RouterLink>
+        <RouterLink to="/amap-component">高德地图组件</RouterLink>
       </nav>
     </div>
   </header>

@@ -5,7 +5,7 @@ import AboutContent from '../components/AboutContent.vue'
 const counter = useCounterStore()
 const value = ref('')
 const data = reactive({
-  name: '小祝子',
+   name: '小祝子',
    age: 18, 
    telPhone: '123333',
    company:"广州xxx有限公司"

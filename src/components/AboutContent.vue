@@ -2,6 +2,7 @@
 import { useCounterStore } from '@/stores/counter'
 import { onMounted, type PropType  } from 'vue'
 import type { User } from '@/types/about';
+import module from 'module';
 const counter = useCounterStore()
 defineProps({
   data: {
@@ -16,6 +17,8 @@ defineProps({
 })
 onMounted(()=>{
   console.log(this,'this-----');
+  console.log(module ,'module ');
+  
 })
 
 
