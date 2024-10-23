@@ -20,9 +20,9 @@ getData()
       <Select v-model="formData.template_branch_id" style="width: 200px">
         <Option
           v-for="item in templateList"
-          :value="item.template_branch_id"
-          :key="item.template_branch_id"
-          >{{ item.label }}</Option
+          :value="item.id"
+          :key="item.id"
+          >{{ item.name }}</Option
         >
       </Select>
     </div>

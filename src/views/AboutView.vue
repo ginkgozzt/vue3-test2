@@ -18,11 +18,12 @@ const data = reactive({
     <div>
       <span>计数:</span>
       <span>{{ counter.count }}</span>
-      <a-button type="primary" @click="counter.increment">增加计算DDD</a-button>
-      <a-button type="primary" @click="counter.decrement">减少计算DDDD</a-button>
+      <a-space>
+        <a-button type="primary" @click="counter.increment">增加计算DDD</a-button>
+        <a-button type="primary" @click="counter.decrement">减少计算DDDD</a-button>
+      </a-space>
     </div>
-    <AboutContent  />
-
+    <AboutContent  :data="data" />
   </div>
 </template>
 

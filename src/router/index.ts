@@ -24,6 +24,11 @@ const router = createRouter({
       path:'/amap-component',
       name:'amap-component',
       component: () => import('../views/AmapView.vue')
+    },
+    {
+      path:'/monaco-editor',
+      name:'monaco-editor',
+      component: () => import('../views/MonacoEditor.vue')
     }
   ]
 })

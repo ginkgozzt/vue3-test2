@@ -6,12 +6,14 @@ import HelloWorld from './components/HelloWorld.vue'
 <template>
   <header>
     <div class="wrapper">
+      hhh
       <HelloWorld msg="You did it!" />
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/custom-component">自定义组件</RouterLink>
         <RouterLink to="/amap-component">高德地图组件</RouterLink>
+        <RouterLink to="/monaco-editor">monaco-editor编辑器</RouterLink>
       </nav>
     </div>
   </header>
@@ -20,6 +22,7 @@ import HelloWorld from './components/HelloWorld.vue'
       <RouterView />
     </template>
   </Suspense>
+  
 
 </template>
 

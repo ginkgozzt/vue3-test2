@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, reactive } from "vue";
 import AMapLoader from "@amap/amap-jsapi-loader";
-import type { title } from "process";
 let map: any = null;
 let AMap: any = null;
 let mapData = reactive({} as any)
@@ -12,22 +11,30 @@ onMounted(() => {
   };
   AMapLoader.load({
     key: "000e3b46d26d682a1e38e9c213f6e3b5", // 申请好的Web端开发者Key，首次调用 load 时必填
-    version: "2.0", // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
+    version: "2.1Beta", // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
     plugins: ["AMap.Scale", "AMap.PlaceSearch", "AMap.Geolocation", "AMap.ToolBar", "AMap.Polyline", "AMap.Pixel", 'AMap.Marker', 'AMap.Bounds'], //需要使用的的插件列表，如比例尺'AMap.Scale'，支持添加多个如：['...','...']
   })
     .then((val) => {
       AMap = val
       map = new AMap.Map("container", {
         // 设置地图容器id
-        viewMode: "3D", // 是否为3D地图模式
+        viewMode: "2D", // 是否为3D地图模式
         zoom: 4, // 初始化地图级别
+        // mapStyle:'amap://styles/grey',
+        // mapStyle:'amap://styles/whitesmoke'
+        // mapStyle :'amap://styles/dark'
+          mapStyle :'amap://styles/fresh',
+          terrain: true, // 地形
+          showIndoorMap: true, // 室内地图
+          
         // center: [116.397428, 39.90923], // 初始化地图中心点位置
       });
       console.log(map, '---map');
-      setTimeout(() => {
-        addPlugins()
-        console.log(map, '---map---2222');
-      }, 500);
+      addPlugins()
+      map.on('click',  (list: any)=>{
+        console.log(list,'list');
+        
+      }); // 添加事件
 
 
 
@@ -112,6 +119,12 @@ function addbound() {
   
 
 }
+function getBounds() {
+  var bounds = map.getBounds();
+  console.log(bounds,'bounds');
+  
+
+}
 
 onUnmounted(() => {
   map?.destroy();
@@ -124,6 +137,7 @@ onUnmounted(() => {
       <a-button class="btn" type="primary" @click="addPolyline">切换折线</a-button>
       <a-button class="btn" type="primary" @click="addPixel">像素点/Marker</a-button>
       <a-button class="btn" type="primary" @click="addbound">矩形边界</a-button>
+      <a-button class="btn" type="primary" @click="getBounds">getBounds</a-button>
     </div>
     <div class="map-container" id="container">高德地图呀</div>
   </main>
@@ -131,8 +145,8 @@ onUnmounted(() => {
 
 <style lang="less" scoped>
 .map-container {
-  width: 800px;
-  height: 400px;
+  min-width: 1200px;
+  min-height: 500px;
 }
 
 .bar-btn {
