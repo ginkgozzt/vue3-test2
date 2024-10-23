@@ -30,6 +30,7 @@ export default defineConfig(({ mode }:any):UserConfig  => {
       }
     },
     server: {
+      hmr: true,
       headers: {
         cookie: VITE_APP_Cookie
       },
