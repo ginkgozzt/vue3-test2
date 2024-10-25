@@ -29,6 +29,11 @@ const router = createRouter({
       path:'/monaco-editor',
       name:'monaco-editor',
       component: () => import('../views/MonacoEditor.vue')
+    },
+    {
+      path:'/chart-view',
+      name:'chart-view',
+      component: () => import('../views/ChartView.vue')
     }
   ]
 })

@@ -15,6 +15,7 @@ console.log(22222);
         <RouterLink to="/custom-component">自定义组件</RouterLink>
         <RouterLink to="/amap-component">高德地图组件</RouterLink>
         <RouterLink to="/monaco-editor">monaco-editor编辑器</RouterLink>
+        <RouterLink to="/chart-view">chart-view</RouterLink>
       </nav>
     </div>
   </header>

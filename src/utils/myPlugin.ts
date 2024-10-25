@@ -5,6 +5,8 @@ const myPlugin = {
     // 配置此应用
     // app.config.globalProperties.request = request 
     app.provide('request',request) 
+    console.log(app,'app');
+    
   }
 }
 export default myPlugin

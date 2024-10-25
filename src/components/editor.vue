@@ -1,70 +1,9 @@
 <script setup lang="ts">
 import * as monaco from "monaco-editor";
-import { ref, onMounted } from "vue";
+import { reactive, ref, onMounted } from "vue";
+
 let editor: any = null;
-let config: any = {
-  original: `{
-    test:77,
-    name:'sss',
-    w:'sss',
-    erwer:'avdfvfd',
-    asdf: {
-      as: 'sasdvfda',
-      asvf: "davfdbfgb",
-      asdddf: "asfdabgfnhgnhgnjhmjm"
-    },
-    dddd:'fgdgnhgnhg',
-    dsbg:'dnghnhgnththy',
-    test22:'-------dddddddddddddddd---------',
-    sbgfhghyq:'ghhnfhmgg',
-    sdavfd555q:'gnhgnhgnhmjh',
-    53trhtq:'dfnhnhg',
-    sdg5t33q:'fbgfbgfn',
-    abc4:'333999999',
-    sbgfhghy:'ghhnfhmgg',
-    sdavfd555:'gnhgnhgnhmjh',
-    53trht:'dfnhnhg',
-    sdg5t33:'fbgfbgfn',
-    abc:'333',
-    ss:'4356566576u476i78vcxcv vb bvs就不可能减肥减m',
-    hh:'dbavjdfbjkdnfbkjfgb你重新记不记得吧和手机壳发的v开电风扇不回复dbsh查看看安康vnbv客服大家女的吧减肥充满女MC女下次开心女乘客就你就不能就发个红包给发',
-    aad:'dfsbbfgngdhnhdgnjhm',
-    sffbdsbg:'sgfbgfgfb',
-    66888: 9000,
-    ss666: 555
-  }`,
-  modified: `{
-    name:'sss',
-    w:'sss',
-    erwer:'avdfvfd',
-    asdf: {
-      as: 'sasdvfda',
-      asvf: "davfdbfgb",
-      asdddf: "asfdabgfnhgnhgnjhmjm"
-    },
-    dddd:'fgdgnhgnhg',
-    dsbg:'dnghnhgnththy',
-    sbgfhghyq:'ghhnfhmgg',
-    sdavfd555q:'gnhgnhgnhmjh',
-    53trhtq:'dfnhnhg',
-    sdg5t33q:'fbgfbgfn',
-    abc4:'333999999',
-    sbgfhghy:'ghhnfhmgg',
-    sdavfd555:'gnhgnhgnhmjh',
-    53trht:'dfnhnhg',
-    sdg5t33:'fbgfbgfn',
-    abc:'333',
-    sbgfhghy:'ghhnfhmgg',
-    sdavfd555:'gnhgnhgnhmjh',
-    53trht:'dfnhnhg',
-    sdg5t33:'fbgfbgfn',
-    abc:'33388888888888888sladvkfdvkjdfanvj dn jkfn jkfgn lgjk ngfk nkgh lnghkl nkjhgn jkhfn jhnj nh',
-    ss:'4356566576u476i78vcxcv vb bvs就不可能减肥减m',
-    age:12,
-    ss666: 555
-  }`,
-};
-console.log(monaco, "monaco");
+
 let editorContainer: any = ref(null);
 
 const initData = () => {
