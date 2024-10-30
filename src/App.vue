@@ -1,7 +1,13 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, } from 'vue-router'
+import { ref, onMounted} from "vue";
 import HelloWorld from './components/HelloWorld.vue'
-console.log(22222);
+const jsStr = ref('const a = 123')
+onMounted(()=>{
+  // console.log(jsStr,'jsStr---');
+  
+
+})
 
 </script>
 

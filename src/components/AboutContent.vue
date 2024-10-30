@@ -3,7 +3,7 @@ import { useCounterStore } from '@/stores/counter'
 import { onMounted, type PropType  } from 'vue'
 import type { User } from '@/types/about';
 const counter = useCounterStore()
-defineProps({
+const props = defineProps({
   data: {
     type: Object as PropType<User>,
     default(){
@@ -16,6 +16,7 @@ defineProps({
 })
 onMounted(()=>{
   console.log(this,'this-----');
+  console.log(props.data.name,'==props===');
   
 })
 

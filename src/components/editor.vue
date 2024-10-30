@@ -1,66 +1,76 @@
 <script setup lang="ts">
 import * as monaco from "monaco-editor";
-import { reactive, ref, onMounted } from "vue";
-
+import { reactive, ref, onMounted, watch } from "vue";
 let editor: any = null;
-
 let editorContainer: any = ref(null);
+const model = defineModel();
+let editorValue = ref("");
+watch(
+  model,
+  () => {
+    if (editor && editorValue.value !== model.value) {
+      editor.setValue(model.value);
+    }
+  },
+  {
+    immediate: true,
+  }
+);
 
 const initData = () => {
-  console.log(
-    editorContainer,
-    editorContainer.value,
-    "editorContainer===",
-    editorContainer._value
-  );
   if (!editor) {
-    editor = monaco.editor.createDiffEditor(editorContainer.value, {
+    editor = monaco.editor.create(editorContainer.value, {
+      language: "javascript",
       folding: true,
-      readOnly: true,
       wordWrap: "on",
-      diffWordWrap: "on",
       automaticLayout: true,
-      enableSplitViewResizing: true,
       lineNumbersMinChars: 2,
       scrollBeyondLastLine: false,
-      renderSideBySide: true,
-      maxFileSize: 1024, // 默认50MB
-      onlyShowAccessibleDiffViewer: false, // 只显示差异的文本
       foldingStrategy: "indentation", // 控制折叠的策略
       showFoldingControls: "always", // 控制折叠控件何时可见
-      renderOverviewRuler: false,
-      maxComputationTime: 10240,
+      tabSize: 2,
+      detectIndentation: false,
       scrollbar: {
         vertical: "auto",
         verticalScrollbarSize: 10,
         verticalSliderSize: 10,
       },
-      hideUnchangedRegions: {
-        enabled: true,
-        contextLineCount: 2,
-        // minimumLineCount: 2
-      },
+    });
+    editor.setValue(model.value);
+    const getValue = () => {
+      let value = editor.getValue();
+      model.value = value;
+      editorValue.value = value;
+    };
+    editor.onDidChangeModelContent(() => {
+      getValue();
+    });
+    editor.onDidBlurEditorText(() => {
+      getValue();
+    });
+    editor.onDidChangeModelDecorations(() => {
+      // getHeight();
     });
   }
-  console.log(editor, "editor");
-
-  // editor.updateOptions({ renderSideBySide: true });
-  let { original, modified } = config;
-  original = original || "";
-  modified = modified || "";
-  editor.setModel({
-    original: monaco.editor.createModel(original, "json"),
-    modified: monaco.editor.createModel(modified, "json"),
-  });
 };
+const getHeight = () =>{
+  // 获取滚动的高度
+  const h = editor.getScrollHeight();
+  console.log(h,'h=====');
+  // 获取内容高度
+  const h1 = editor.getContentHeight();
+  console.log(h1,'h1====');
+  
+}
 onMounted(() => {
-  setTimeout(() => {
-    initData();
-  }, 500);
+  initData();
 });
 </script>
 <template>
   <div class="editor">
+    <a-space wrap>
+      <a-button type="primary" @click="getHeight">获取编辑器的高度</a-button>
+    </a-space>
     <div ref="editorContainer" class="editorContainer"></div>
   </div>
 </template>
@@ -73,7 +83,8 @@ onMounted(() => {
   }
 }
 .editorContainer {
-  height: 300px;
+  height: 100%;
+  min-height: 300px;
   border: 1px solid #ccc;
 }
 </style>
