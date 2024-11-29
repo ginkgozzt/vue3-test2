@@ -10,6 +10,8 @@ const data = reactive({
    telPhone: '123333',
    company:"广州xxx有限公司"
 }) // 同名传参设置
+
+
 </script>
 <template>
   <div class="about">
