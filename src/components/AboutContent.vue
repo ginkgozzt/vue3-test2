@@ -18,6 +18,7 @@ onMounted(()=>{
   console.log(this,'this-----');
   console.log(props.data.name,'==props===');
   
+  
 })
 
 

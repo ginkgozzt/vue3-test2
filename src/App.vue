@@ -22,6 +22,8 @@ onMounted(()=>{
         <RouterLink to="/amap-component">高德地图组件</RouterLink>
         <RouterLink to="/monaco-editor">monaco-editor编辑器</RouterLink>
         <RouterLink to="/chart-view">chart-view</RouterLink>
+        <RouterLink to="/dashboard">大屏</RouterLink>
+        <RouterLink to="/dashboard1">大屏1</RouterLink>
       </nav>
     </div>
   </header>
