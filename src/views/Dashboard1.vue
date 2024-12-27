@@ -1,6 +1,12 @@
 <template>
   <div class="container">
-    <div v-for="(person, index) in people" :key="index" class="person" :style="getPersonStyle(person, index)">
+    {{ people.length }}
+    <div
+      v-for="(person, index) in people"
+      :key="index"
+      class="person"
+      :style="getPersonStyle(person, index)"
+    >
       Person {{ index + 1 }}
     </div>
   </div>
@@ -47,8 +53,8 @@ function createRandomPerson() {
 
 // 生成随机颜色的函数
 function getRandomColor() {
-  const letters = '0123456789ABCDEF';
-  let color = '#';
+  const letters = "0123456789ABCDEF";
+  let color = "#";
   for (let i = 0; i < 6; i++) {
     color += letters[Math.floor(Math.random() * 16)];
   }
@@ -57,13 +63,13 @@ function getRandomColor() {
 
 function getPersonStyle(person, index) {
   return {
-    left: person.x + 'px',
-    top: person.y + 'px',
+    left: person.x + "px",
+    top: person.y + "px",
     opacity: person.opacity,
     transform: `scale(${person.scale})`,
     filter: `blur(${person.blur}px)`, // 模糊效果
     backgroundColor: person.color, // 使用随机颜色
-    zIndex: (currentCenterPersonIndex === index) ? 10 : 1,
+    zIndex: currentCenterPersonIndex === index ? 10 : 1,
   };
 }
 
@@ -119,7 +125,7 @@ function animateCenterPerson() {
             setTimeout(() => {
               returnToLeft = true; // 开始从左侧回来
               centerPerson.x = -50; // 将人移动到左侧
-              
+
               // 模糊和缩小效果
               let fadeOutInterval = setInterval(() => {
                 centerPerson.opacity -= 0.02; // 逐渐消失
@@ -131,12 +137,30 @@ function animateCenterPerson() {
                   clearInterval(fadeOutInterval); // 停止模糊更新
 
                   // 生成新的随机人物并替换掉消失的人
-                  const newPerson = createRandomPerson();
-                  newPerson.x = Math.random() * (containerWidth - 50); 
-                  people.value[currentCenterPersonIndex] = newPerson;
+                  // const newPerson = createRandomPerson();
+                  let newPerson = {
+                    ...centerPerson
+                  };
+                  let lastIndex = currentCenterPersonIndex;
+                  setTimeout(() => {
+                    newPerson = {
+                      ...newPerson,
+                      x: -100,
+                      y: centerY,
+                      targetX: 0,
+                      targetY: Math.random() * (containerHeight - 50),
+                      opacity: 1,
+                      scale: 1,
+                      isAnimating: false,
+                      blur: 0,
+                    };
+                    // newPerson.x = Math.random() * (containerWidth - 50);
+                    people.value[lastIndex] = newPerson;
+                  }, 200);
 
                   // 选择下一个人作为中心人物
-                  currentCenterPersonIndex = (currentCenterPersonIndex + 1) % personCount; // 确保当前索引加1循环
+                  currentCenterPersonIndex =
+                    (currentCenterPersonIndex + 1) % personCount; // 确保当前索引加1循环
                   people.value[currentCenterPersonIndex].targetX = centerX;
                   people.value[currentCenterPersonIndex].targetY = centerY;
                   shouldStay = false; // 重置停留状态
