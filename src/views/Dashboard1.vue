@@ -1,144 +1,207 @@
 <template>
-  <div class="circle-container">
-    <div class="central-avatar">
-      <img :src="centerPerson.avatar" :alt="centerPerson.name" />
-      <div class="info">
-        <h2>{{ centerPerson.name }}</h2>
-        <p>{{ centerPerson.details }}</p>
-      </div>
-    </div>
-    <div v-for="(group, groupIndex) in groups" :key="groupIndex" class="avatar-group">
-      <div
-        v-for="(person, index) in group"
-        :key="index"
-        class="avatar"
-        :style="getAvatarStyle(groupIndex, index)"
-      >
-        <img :src="person.src" :alt="person.name" />
-      </div>
+  <div class="container">
+    <div v-for="(person, index) in people" :key="index" class="person" :style="getPersonStyle(person, index)">
+      Person {{ index + 1 }}
     </div>
   </div>
 </template>
 
-<script>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted } from "vue";
 
-export default {
-  setup() {
-    const centerPerson = {
-      name: '中心人物',
-      details: '中心人物详细信息',
-      avatar: 'https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png',
-    };
+const containerWidth = 500;
+const containerHeight = 600;
+const personCount = 13; // 池子中总人数
+const centerX = containerWidth / 2 - 25; // 中心位置（考虑50px的宽度）
+const centerY = containerHeight / 2 - 25; // 中心位置（考虑50px的高度）
 
-    const groups = ref([
-      Array.from({ length: 5 }, (_, i) => ({
-        name: `组1-人员${i + 1}`,
-        src: 'https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png',
-      })),
-      Array.from({ length: 5 }, (_, i) => ({
-        name: `组2-人员${i + 1}`,
-        src: 'https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png',
-      })),
-      Array.from({ length: 5 }, (_, i) => ({
-        name: `组3-人员${i + 1}`,
-        src: 'https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png',
-      })),
-    ]);
+const people = ref(generateRandomPeople(personCount)); // 生成初始人数
+const speed = 1; // 移动速度
+let currentCenterPersonIndex = -1; // 当前在中心位置的人的索引
+let shouldStay = false; // 是否应该停留
+let shouldFadeOut = false; // 是否应该淡出
+let returnToLeft = false; // 是否应该从左侧返回
 
-    const angleShifts = ref(groups.value.map(() => 0)); // 每组的角度偏移
-    const baseRadius = 100; // 最小半径
-    const radiusIncrement = 50; // 半径增量
-    const randomSizes = ref(groups.value.map(group => group.map(() => 30 + Math.random() * 40))); // 随机头像大小（范围30px到70px）
+function generateRandomPeople(count) {
+  const randomPeople = [];
+  for (let i = 0; i < count; i++) {
+    randomPeople.push(createRandomPerson());
+  }
+  return randomPeople;
+}
 
-    const getAvatarStyle = (groupIndex, index) => {
-      const totalAvatars = groups.value[groupIndex].length; // 当前组内成员数量
-      const radius = baseRadius + groupIndex * radiusIncrement; // 当前组的半径
-      const angle = (index * (2 * Math.PI)) / totalAvatars + angleShifts.value[groupIndex]; // 当前头像的角度
+// 创建随机人物的函数
+function createRandomPerson() {
+  return {
+    x: Math.random() * (containerWidth - 50),
+    y: Math.random() * (containerHeight - 50),
+    targetX: Math.random() * (containerWidth - 50),
+    targetY: Math.random() * (containerHeight - 50),
+    opacity: 1,
+    scale: 1,
+    isAnimating: false,
+    blur: 0, // 添加模糊属性
+    color: getRandomColor(), // 添加随机颜色属性
+  };
+}
 
-      const x = radius * Math.cos(angle); // 计算 x 坐标
-      const y = radius * Math.sin(angle); // 计算 y 坐标
+// 生成随机颜色的函数
+function getRandomColor() {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
 
-      const avatarSize = randomSizes.value[groupIndex][index]; // 获取随机大小
+function getPersonStyle(person, index) {
+  return {
+    left: person.x + 'px',
+    top: person.y + 'px',
+    opacity: person.opacity,
+    transform: `scale(${person.scale})`,
+    filter: `blur(${person.blur}px)`, // 模糊效果
+    backgroundColor: person.color, // 使用随机颜色
+    zIndex: (currentCenterPersonIndex === index) ? 10 : 1,
+  };
+}
 
-      console.log(angle,'angle----');
-      
+function moveToTarget(person) {
+  const dx = person.targetX - person.x;
+  const dy = person.targetY - person.y;
+  const distance = Math.sqrt(dx * dx + dy * dy);
 
-      return {
-        position: 'absolute',
-        left: '50%',
-        top: '50%',
-        transform: `translate(${x}px, ${y}px)`,
-        width: `${avatarSize}px`, // 应用随机大小
-        height: `${avatarSize}px`, // 应用随机大小
-      };
-    };
+  // 如果到达目标位置，重新设置目标位置
+  if (distance < speed) {
+    person.x = person.targetX;
+    person.y = person.targetY;
+    person.targetX = Math.random() * (containerWidth - 50);
+    person.targetY = Math.random() * (containerHeight - 50);
+  } else {
+    // 计算新的位置
+    person.x += (dx / distance) * speed;
+    person.y += (dy / distance) * speed;
+  }
+}
 
-    const updatePositions = () => {
-      angleShifts.value = angleShifts.value.map((shift, index) => shift + (0.01 + index * 0.01)); // 增加每组的速度
-      console.log(   angleShifts.value ,'   angleShifts.value ');
-      
-    };
+function moveToCenter(person) {
+  const dx = centerX - person.x;
+  const dy = centerY - person.y;
+  const distance = Math.sqrt(dx * dx + dy * dy);
 
-    onMounted(() => {
-      const interval = setInterval(updatePositions, 80); // 每100毫秒更新一次位置
+  // 计算新的位置
+  if (distance > speed) {
+    person.x += (dx / distance) * speed;
+    person.y += (dy / distance) * speed;
+  } else {
+    person.x = centerX;
+    person.y = centerY;
+  }
+}
 
-      onBeforeUnmount(() => {
-        clearInterval(interval); // 清理定时器
-      });
-    });
+function animateCenterPerson() {
+  if (currentCenterPersonIndex === -1) {
+    // 如果没有人在中心位置，选择一个人移动到中心
+    currentCenterPersonIndex = Math.floor(Math.random() * personCount);
+    people.value[currentCenterPersonIndex].targetX = centerX;
+    people.value[currentCenterPersonIndex].targetY = centerY;
+  } else {
+    const centerPerson = people.value[currentCenterPersonIndex];
+    if (centerPerson.x === centerX && centerPerson.y === centerY) {
+      // 如果已经在中心位置，开始放大以及停留
+      if (!shouldStay) {
+        centerPerson.scale += 0.05; // 逐渐放大
+        if (centerPerson.scale >= 3) {
+          shouldStay = true; // 放大完成，开始停留
+          setTimeout(() => {
+            shouldFadeOut = true; // 开始消失
+            setTimeout(() => {
+              returnToLeft = true; // 开始从左侧回来
+              centerPerson.x = -50; // 将人移动到左侧
+              
+              // 模糊和缩小效果
+              let fadeOutInterval = setInterval(() => {
+                centerPerson.opacity -= 0.02; // 逐渐消失
+                centerPerson.scale -= 0.02; // 逐渐变小
+                centerPerson.blur += 0.5; // 逐渐增加模糊
 
-    return {
-      centerPerson,
-      groups,
-      getAvatarStyle,
-    };
-  },
-};
+                if (centerPerson.opacity <= 0) {
+                  centerPerson.opacity = 0; // 确保不小于0
+                  clearInterval(fadeOutInterval); // 停止模糊更新
+
+                  // 生成新的随机人物并替换掉消失的人
+                  const newPerson = createRandomPerson();
+                  newPerson.x = Math.random() * (containerWidth - 50); 
+                  people.value[currentCenterPersonIndex] = newPerson;
+
+                  // 选择下一个人作为中心人物
+                  currentCenterPersonIndex = (currentCenterPersonIndex + 1) % personCount; // 确保当前索引加1循环
+                  people.value[currentCenterPersonIndex].targetX = centerX;
+                  people.value[currentCenterPersonIndex].targetY = centerY;
+                  shouldStay = false; // 重置停留状态
+                  shouldFadeOut = false; // 重置淡出状态
+                  returnToLeft = false; // 重置返回状态
+                }
+              }, 16); // 约60帧
+            }, 3000); // 停留3秒
+          }, 3000); // 停留3秒
+        }
+      }
+    }
+  }
+}
+
+function updatePeople() {
+  for (let i = 0; i < people.value.length; i++) {
+    if (i === currentCenterPersonIndex) {
+      if (returnToLeft) {
+        // 处于从左侧返回状态，不需要正常移动
+        const centerPerson = people.value[i];
+        centerPerson.scale += 0.02; // 从左侧返回，逐渐变大
+        if (centerPerson.scale >= 1) {
+          centerPerson.scale = 1; // 恢复正常大小
+          centerPerson.opacity = 1; // 恢复可见
+          centerPerson.x = Math.random() * (containerWidth - 50); // 随机设置位置
+          returnToLeft = false; // 结束返回状态
+        }
+      } else {
+        moveToCenter(people.value[i]); // 中心位置的人移动到中心
+      }
+    } else {
+      moveToTarget(people.value[i]); // 其他人随机移动
+    }
+  }
+}
+
+let interval;
+
+onMounted(() => {
+  interval = setInterval(() => {
+    updatePeople();
+    animateCenterPerson();
+  }, 16); // 每16毫秒更新位置（约60帧）
+});
+
+onUnmounted(() => {
+  clearInterval(interval); // 清理定时器
+});
 </script>
 
-<style scoped>
-.circle-container {
+<style>
+.container {
   position: relative;
   width: 500px;
-  height: 500px;
-  margin: auto;
-  background-color: #ccc;
+  height: 600px;
+  border: 1px solid #000;
+  overflow: hidden;
 }
 
-.central-avatar {
+.person {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
-
-.central-avatar img {
-  width: 80px; /* 中心头像的宽度 */
-  height: 80px; /* 中心头像的高度 */
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-}
-
-.info {
-  text-align: center;
-  color: #333;
-}
-
-.avatar-group {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.avatar {
-  position: absolute;
-  border-radius: 50%; /* 圆形头像 */
-}
-
-.avatar img {
-  width: 100%;
-  height: 100%;
+  transition: opacity 3s, transform 1s, filter 1s; /* 调整过渡时间 */
 }
 </style>
