@@ -31,7 +31,7 @@ onMounted(() => {
       });
       console.log(map, '---map');
       addPlugins()
-      map.on('click',  (list: any)=>{
+      map.on('click',  (list : any): any=>{
         console.log(list,'list');
         
       }); // 添加事件
